@@ -1,0 +1,113 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> TM21 | Add Employee </title>
+    <link rel="stylesheet" th:href="@{css/Admin_NavBar.css}"/>
+    <style type="text/css">
+        .account-success-message, .password-success-message {
+            color: green;
+        }
+
+        .account-error-message, .password-error-message {
+            color: red;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3>ADD NEW EMPLOYEE</h3>
+            <h4>TYPE IN INFORMATION</h4>
+        </article>
+
+        <div>
+            <p class="account-success-message"></p>
+            <p class="account-error-message"></p>
+        </div>
+
+        <form action="#" method="post" id="account-add-form">
+            <select class="select" name="role" required>
+                <option selected disabled>Choose role</option>
+                <option th:if="${user.role != 'ROLE_EMPLOYEE'}" value="ROLE_EMPLOYEE">EMPLOYEE</option>
+                <option th:if="${user.role != 'ROLE_ADMIN'}" value="ROLE_ADMIN">ADMIN</option>
+            </select>
+
+            <input class="radio" type="text" id="empName" th:value="${user.name}" name="name" required
+                   placeholder="Name">
+            <input class="radio" type="text" id="empSurname" th:value="${user.surname}" required name="surname"
+                   placeholder="Surname">
+            <input class="radio" type="text" id="empAdress" name="address" th:value="${user.address.address}"
+                   placeholder="Address">
+            <input class="radio" type="text" id="empZIP" name="zip" th:value="${user.address.zip}" placeholder="ZIP">
+            <input class="radio" type="text" id="empState" name="state" th:value="${user.address.state}"
+                   placeholder="State">
+            <input class="radio" type="tel" id="empTel" name="telNumber" th:value="${user.telNumber}"
+                   placeholder="Telephone-Number">
+            <input class="radio" type="email" id="empEmail" name="email" th:value="${user.email}" placeholder="E-Mail">
+            <input class="radio" type="time" step="1" id="empDayWorkHours" name="dayWorkHours"
+                   th:value="${user.dayWorkHours}" placeholder="Day Work Hours">
+
+            <button class="btn" id="createEmpStoreReportBtn" type="submit">CREATE EMPLOYEE</button>
+        </form>
+        <button onclick="backToDash()" class="btn" id="backToDash">BACK TO DASHBOARD</button>
+
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+    <script type="text/javascript">
+        document.getElementById("account-add-form").addEventListener("submit", e => {
+            e.preventDefault();
+
+
+            //save account details
+            $.ajax({
+                method: "post",
+                url: "/api/add-account",
+                data: $("#account-add-form").serializeArray(),
+                dataType: "text",
+                success: response => {
+
+                    //the server responds with updated or not_authenticated
+                    if (response == "added") {
+                        $(".account-error-message").text("")
+                        $("#account-add-form").trigger("reset");
+                        $(".account-success-message").text("Account details added successfully")
+                    } else if (response == "email_exist") {
+                        $(".account-error-message").text("Email exist")
+                        $(".account-success-message").text("")
+                    } else if (response == "not_authenticated") {
+                        window.location.href = "/login";
+                    } else {
+                        $(".account-error-message").text("Error while adding account")
+                        $(".account-success-message").text("")
+                    }
+
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+    </script>
+</th:block>
+</body>
+</html> 

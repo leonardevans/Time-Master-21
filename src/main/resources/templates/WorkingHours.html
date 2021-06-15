@@ -1,0 +1,142 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> TM21 | Working Hours </title>
+    <link rel="stylesheet" th:href="@{css/Admin_NavBar.css}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3>EDIT WORKING HOURS</h3>
+            <h4>CHOOSE A DATE TO EDIT</h4>
+        </article>
+
+        <form action="#" id="WorkingHours_request_form">
+            <input type="date" class="radio" id="workingDayDate" required name="workingDayDate">
+            <button class="btn" id="showWorkingHrs">EDIT</button>
+        </form>
+
+        <label>AFTER PRESSING "EDIT"-BTN: LIST WORKED HOURS FROM DATABASE HERE...</label>
+
+        <p id="update-result"></p>
+        <form action="#" id="WorkingHoursForm">
+
+        </form>
+
+        <button onclick="backToDash()" class="btn" id="backToDash">BACK TO DASHBOARD</button>
+
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+
+    <script type="text/javascript">
+        document.getElementById("WorkingHours_request_form").addEventListener("submit", e => {
+            e.preventDefault();
+
+            $("#update-result").text("");
+
+            // save account details
+            $.ajax({
+                method: "post",
+                url: "/api/getUserDayReportToEdit",
+                data: $("#WorkingHours_request_form").serializeArray(),
+                dataType: "text",
+                success: response => {
+
+                    console.log(response)
+
+                    if (response == "unauthenticated"){
+                        window.location.href = "/login";
+                    }else if (response == ""){
+                        $("#WorkingHoursForm").text("No work record for that day")
+                    }else
+                    {
+                        //get day report
+                        let report = JSON.parse(response);
+
+                        let inputs = '';
+                        inputs += "<input name='id' type='hidden' class='radio' readonly value='" + report.id + "'/>";
+                        inputs += "Date <input name='day' type='date' class='radio' readonly value='" + report.day + "'/>";
+                        inputs += "Actual Hours <input name='timeWorked' type='time' class='radio' required value='" + report.timeWorked + "'/>";
+                        inputs += "Target Hours <input name='dayWorkTime' type='time' class='radio' required value='" + report.dayWorkTime + "'/>";
+                        inputs += "Overtime <span>" + report.overTime + "</span>";
+                        inputs += "<input name='user_id' type='hidden' class='radio' value='" + report.user.id + "'/>";
+
+                        inputs += "<input name='submit' type='submit' class='btn' value='SAVE'/>";
+
+                        $("#WorkingHoursForm").html(inputs)
+                    }
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+
+        document.getElementById("WorkingHoursForm").addEventListener("submit", e => {
+            e.preventDefault();
+
+            // save account details
+            $.ajax({
+                method: "post",
+                url: "/api/updateUserDayReport",
+                data: $("#WorkingHoursForm").serializeArray(),
+                dataType: "text",
+                success: response => {
+
+                    console.log(response)
+
+                    if (response == "unauthenticated"){
+                        window.location.href = "/login";
+                    }else if (response == "day_not_found"){
+                        $("#update-result").text("Day Work not found");
+                    }else
+                    {
+                        //get day report
+                        let report = JSON.parse(response);
+
+                        $("#update-result").text("Day Work updated successfully");
+
+                        let inputs = '';
+                        inputs += "<input name='id' type='hidden' class='radio' readonly value='" + report.id + "'/>";
+                        inputs += "<input name='day' type='date' class='radio' readonly value='" + report.day + "'/>";
+                        inputs += "Actual Hours <input name='timeWorked' type='time' class='radio' value='" + report.timeWorked + "'/>";
+                        inputs += "Target Hours <input name='dayWorkTime' type='time' class='radio' value='" + report.dayWorkTime + "'/>";
+                        inputs += "Overtime <span>" + report.overTime + "</span>";
+                        inputs += "<input name='user_id' type='hidden' class='radio' value='" + report.user.id + "'/>";
+
+                        inputs += "<input name='submit' type='submit' class='btn' value='SAVE'/>";
+
+                        $("#WorkingHoursForm").html(inputs)
+                    }
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+    </script>
+</th:block>
+</body>
+</html> 

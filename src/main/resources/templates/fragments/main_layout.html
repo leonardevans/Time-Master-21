@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE"></title>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{images/TM21.png}">
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{images/TM21.png}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/47a8402c7b.js" crossorigin="anonymous"></script> <!-- Wird benötigt für die Icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<th:block layout:fragment="content"></th:block>
+
+
+<th:block layout:fragment="javascript">
+</th:block>
+
+<script th:src="@{js/Admin_NavBar.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <title> TM21 | Working Hours </title>
+    <link rel="stylesheet" th:href="@{css/Index.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style type="text/css">
+        .book-success-message{
+            color: green;
+        }
+
+        .book-error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3 id="welcomeHeader">BOOK VACATION</h3>
+            <h4 id="chooseVacDateHeader">CHOOSE A START DATE AND END DATE</h4>
+        </article>
+
+        <form action="#" id="vacationBookingForm">
+            <label for="startDate">Starting Date</label>
+            <input type="date" class="radio" id="startDate" required name="startDate">
+            <label for="endDate" >Ending Date</label>
+            <input type="date" class="radio" required id="endDate" name="endDate">
+            <p class="book-error-message"></p>
+            <p class="book-success-message"></p>
+            <button class="btn" id="editWorkingHrs">BOOK</button>
+        </form>
+
+        <button onclick="backToDash()" class="btn" id="backToDashBtn">BACK TO DASHBOARD</button>
+
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+    <script th:src="@{js/ChangeLanguage_BookVacation.js}"></script>
+    <script type="text/javascript">
+        document.getElementById("vacationBookingForm").addEventListener("submit", e => {
+            e.preventDefault();
+
+            //save account details
+            $.ajax({
+                method: "post",
+                url: "/api/bookVacation",
+                data: $("#vacationBookingForm").serializeArray(),
+                dataType: "text",
+                success: response => {
+                    console.log(response)
+
+                    //the server responds with updated or not_authenticated
+                    if (response == "booked") {
+                        $(".book-error-message").text("")
+                        $("#vacationBookingForm").trigger("reset");
+                        $(".book-success-message").text("Vacation booked successfully")
+                    } else {
+                        $(".book-error-message").text("Error while booking vacation")
+                        $(".book-success-message").text("")
+                    }
+
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+    </script>
+</th:block>
+
+</body>
+</html> 

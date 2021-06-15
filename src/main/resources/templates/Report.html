@@ -1,0 +1,105 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <title> TM21 | Report </title>
+    <link rel="stylesheet" th:href="@{css/Admin_NavBar.css}">
+    <!-- Wird benötigt für die Icons -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3>CREATE WORK HOURS REPORT</h3>
+            <h4>CHOOSE A CATEGORY:</h4>
+        </article>
+
+        <form action="#" id="report-form">
+            <input type="radio" class="radio" id="dayReport" name="reportCategory" value="DayReport">
+            <label for="dayReport">Day Report</label>
+
+            <input type="radio" class="radio" id="monthReport" name="reportCategory" value="monthReport">
+            <label for="monthReport">Month Report</label>
+
+            <input type="radio" class="radio" id="yearReport" name="reportCategory" value="yearReport">
+            <label for="yearReport">Year Report</label>
+
+            <button class="btn" type="submit" id="reportBtn2">CREATE REPORT</button>
+        </form>
+
+        <table class="table">
+            <thead>
+            <th>Date</th>
+            <th>Actual Hours</th>
+            <th>Target Hours</th>
+            <th>Overtime</th>
+            </thead>
+            <tbody id="reportBody">
+
+            </tbody>
+        </table>
+
+
+        <button onclick="backToDash()" class="btn" id="backToDash">BACK TO DASHBOARD</button>
+
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+
+    <script type="text/javascript">
+        document.getElementById("report-form").addEventListener("submit", e => {
+            e.preventDefault();
+
+            //save account details
+            $.ajax({
+                method: "post",
+                url: "/api/getUserDayReport",
+                data: $("#account-add-form").serializeArray(),
+                dataType: "text",
+                data: {
+                    type: $('input[name="reportCategory"]:checked').val(),
+                },
+                success: response => {
+
+                    //the server responds with updated or not_authenticated
+                    let reports = JSON.parse(response);
+
+                    let reportsTable= '';
+                    reports.forEach(report => {
+                        reportsTable += "<tr>";
+                        reportsTable += "<td>" + report.day + "</td>";
+                        reportsTable += "<td>" + report.timeWorked + "</td>";
+                        reportsTable += "<td>" + report.dayWorkTime + "</td>";
+                        reportsTable += "<td>" + report.overTime + "</td>";
+                        reportsTable += "</tr>";
+                    })
+
+                    $("#reportBody").html(reportsTable)
+
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+    </script>
+</th:block>
+
+</body>
+</html> 

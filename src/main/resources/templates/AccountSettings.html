@@ -1,0 +1,176 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <title> TM21 | Account Settings </title>
+    <link rel="stylesheet" th:href="@{css/Admin_NavBar.css}">
+
+    <style type="text/css">
+        .account-success-message, .password-success-message {
+            color: green;
+        }
+
+        .account-error-message, .password-error-message {
+            color: red;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3>ACCOUNT SETTINGS</h3>
+            <h4>EDIT INFORMATION | CHANGE PASSWORD</h4>
+        </article>
+
+
+        <form action="#" id="account-form" method="post">
+            <div>
+                <p class="account-success-message"></p>
+                <p class="account-error-message"></p>
+            </div>
+            <input class="radio" placeholder="Name" required type="text" th:value="${user.name}" id="name" name="name">
+            <input class="radio" placeholder="Surname" type="text" id="surname" name="surname"
+                   th:value="${user.surname}">
+            <input class="radio" placeholder="Address" type="text" id="address" name="address"
+                   th:value="${user.getAddress().address}">
+            <input class="radio" placeholder="Zip" type="text" id="empZIP" name="zip"
+                   th:value="${user.getAddress().zip}">
+            <input class="radio" placeholder="State" type="text" id="empState" name="state"
+                   th:value="${user.getAddress().state}">
+            <input class="radio" placeholder="Telephone number" type="tel" id="empTel" name="telNumber"
+                   th:value="${user.telNumber}">
+            <input class="radio" required placeholder="Email" type="email" id="empEmail" readonly
+                   th:value="${user.email}" name="email">
+
+            <button class="btn" type="submit" id="saveAccSett">SAVE CHANGES</button>
+        </form>
+        </br>
+
+        <form action="" id="password-form">
+            <div>
+                <p class="password-success-message"></p>
+                <p class="password-error-message"></p>
+            </div>
+            <input class="radio" type="password" required placeholder="New Password" id="changePSWInput"
+                   name="password">
+            <input class="radio" type="password" required placeholder="Confirm New Password" id="confirmChangePSWInput"
+                   name="confirm-password">
+            <label for="showPSW" name="show password" id="showPSW">Show Password</label>
+            <input type="checkbox" class="radio" onclick="showPSW()">
+
+            <button class="btn" id="changePSW">CHANGE PASSWORD</button>
+        </form>
+        <button onclick="backToDash()" class="btn" id="backToDash">BACK TO DASHBOARD</button>
+
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+    <script type="text/javascript">
+        // SHOW PASSWORD TOGGLE
+        function showPSW() {
+            var x = document.getElementById("changePSWInput");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+
+            var y = document.getElementById("confirmChangePSWInput");
+            if (y.type === "password") {
+                y.type = "text";
+            } else {
+                y.type = "password";
+            }
+        }
+
+
+        document.getElementById("account-form").addEventListener("submit", e => {
+            e.preventDefault();
+
+
+            //save account details
+            $.ajax({
+                method: "post",
+                url: "/api/update-account",
+                data: $("#account-form").serializeArray(),
+                dataType: "text",
+                success: response => {
+
+                    //the server responds with updated or not_authenticated
+                    if (response == "updated") {
+                        $(".account-error-message").text("")
+                        $(".account-success-message").text("Account details updated successfully")
+                    } else if (response == "not_authenticated") {
+                        window.location.href = "/login";
+                    } else {
+                        $(".account-error-message").text("Error while updating account")
+                        $(".account-success-message").text("")
+                    }
+
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+
+        document.getElementById("password-form").addEventListener("submit", e => {
+            e.preventDefault();
+
+            if ($("#changePSWInput").val() != $("#confirmChangePSWInput").val()) {
+                $(".password-error-message").text("New passwords should match!")
+                $(".password-success-message").text("")
+                return
+            }
+
+            //save account details
+            $.ajax({
+                method: "post",
+                url: "/api/update-password",
+                data: $("#password-form").serializeArray(),
+                dataType: "text",
+                success: response => {
+
+                    //the server responds with updated or not_authenticated
+                    if (response == "updated") {
+                        $(".password-error-message").text("")
+                        $("#changePSWInput").val("");
+                        $("#confirmChangePSWInput").val("");
+                        $(".password-success-message").text("Password updated successfully")
+                    } else if (response == "not_authenticated") {
+                        window.location.href = "/login";
+                    } else {
+                        $(".password-error-message").text("Error while updating password")
+                        $(".password-success-message").text("")
+                    }
+
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+    </script>
+</th:block>
+
+</body>
+</html> 

@@ -1,0 +1,120 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <title> TM21 | Requests </title>
+    <link rel="stylesheet" th:href="@{css/Index.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <style>
+        .request-status{
+            border-radius: 50%;
+            border: 0px solid black;
+            width: 30px;
+            height: 30px;
+        }
+
+        .request-status:hover{
+            cursor: pointer;
+        }
+
+        .accepted{
+            background-color: green;
+        }
+
+        .not_accepted{
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3 id="reqHeader">REQUESTS</h3>
+            <h4 id="reqHeader2">ACCEPT / DENY REQUESTS</h4>
+        </article>
+
+        <p id="vacation-result"></p>
+        <table class="table">
+            <thead>
+            <th>Employee Email</th>
+            <th>Booking Date</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Duration</th>
+            <th>Accepted</th>
+            <th></th>
+            </thead>
+            <tbody>
+            <tr th:each="vacationRequest: ${vacationRequests}">
+                <td>[[${vacationRequest.user.email}]]</td>
+                <td>[[${vacationRequest.bookDate}]]</td>
+                <td>[[${vacationRequest.startDate}]]</td>
+                <td>[[${vacationRequest.endDate}]]</td>
+                <td>[[${vacationRequest.duration}]]</td>
+                <td>
+                    <button th:class="request-status" th:attr="data-request_id=${vacationRequest.id}" th:classappend="${vacationRequest.accepted} ? accepted : not_accepted"></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button onclick="backToDash()" class="btn" id="backToDashBtn">BACK TO DASHBOARD</button>
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+    <script th:src="@{js/Admin_Index.js}"></script>
+    <script th:src="@{js/ChangeLanguage_Request.js}"></script>
+
+    <script type="text/javascript">
+        $(".request-status").click(e => {
+            let requestId = e.target.dataset.request_id;
+            console.log(requestId)
+
+            $.ajax({
+                method: "post",
+                url: "/api/update_vacation_request",
+                data: {
+                    requestId: requestId,
+                },
+                dataType: "json",
+                success: response => {
+                    console.log(response)
+                    if (response.paid === true){
+                        $("#vacation-result").text("Vacation request accepted");
+                        e.target.classList.remove("not_accepted");
+                        e.target.classList.add("accepted");
+                    }else{
+                        $("#vacation-result").text("Vacation request not accepted");
+                        e.target.classList.remove("accepted");
+                        e.target.classList.add("not_accepted");
+                    }
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        });
+    </script>
+</th:block>
+
+
+</body>
+</html> 

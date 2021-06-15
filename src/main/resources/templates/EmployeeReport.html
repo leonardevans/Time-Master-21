@@ -1,0 +1,127 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title> TM21 | Employee / Store Report </title>
+    <link rel="stylesheet" th:href="@{css/Admin_NavBar.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <p><img th:src="@{/images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+        </header>
+
+        <!-- 2. HEADER -->
+        <article class="main">
+            <h3>CREATE REPORT</h3>
+            <h4>CHOOSE EMPLOYEE OR STORE REPORT:</h4>
+        </article>
+
+        <form action="#" id="report-form">
+            <select class="select" id="employee-store-select" name="employee-store-selection" required>
+                <option selected disabled>Choose an option</option>
+                <option value="employeeReport">Employee Report</option>
+                <option value="storeReport">Store Report</option>
+            </select>
+
+            <input class="radio" type="email" id="empEmail" name="empEmail" placeholder="Email Id">
+
+            <input type="radio" class="radio" id="dayReport" name="reportCategory" value="DayReport">
+            <label for="dayReport">Day Report</label>
+
+            <input type="radio" class="radio" id="monthReport" name="reportCategory" value="monthReport">
+            <label for="monthReport">Month Report</label>
+
+            <input type="radio" class="radio" id="yearReport" name="reportCategory" value="yearReport">
+            <label for="yearReport">Year Report</label>
+
+            <button class="btn" id="createEmpStoreReportBtn">CREATE REPORT</button>
+        </form>
+
+        <table class="table">
+            <thead>
+            <th>Employee Email</th>
+            <th>Date</th>
+            <th>Actual Hours</th>
+            <th>Target Hours</th>
+            <th>Overtime</th>
+            </thead>
+            <tbody id="reportBody">
+
+            </tbody>
+        </table>
+
+        <button onclick="backToDash()" class="btn" id="backToDash">BACK TO DASHBOARD</button>
+
+    </div>
+</section>
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{js/Admin_NavBar.js}"></script>
+
+    <script type="text/javascript">
+        //when the user selects employee or store report
+        $("#employee-store-select").change(e => {
+            if ($("#employee-store-select").val() == "employeeReport") {
+                $("#empEmail").show();
+            } else if ($("#employee-store-select").val() == "storeReport") {
+                $("#empEmail").hide();
+            }
+            }
+        )
+
+        document.getElementById("report-form").addEventListener("submit", e => {
+            e.preventDefault();
+
+            //save account details
+            $.ajax({
+                method: "post",
+                url: "/api/getEmployeeReport",
+                data: $("#report-form").serializeArray(),
+                dataType: "text",
+                success: response => {
+
+                    if (response == "employee_not_exist"){
+                        $("#reportBody").text("No employee with the provided email!")
+                    }
+
+                    //the server responds with updated or not_authenticated
+                    let reports = JSON.parse(response);
+
+                    console.log(response)
+
+                    let reportsTable = '';
+                    reports.forEach(report => {
+                        reportsTable += "<tr>";
+                        reportsTable += "<td>" + report.user.email + "</td>";
+                        reportsTable += "<td>" + report.day + "</td>";
+                        reportsTable += "<td>" + report.timeWorked + "</td>";
+                        reportsTable += "<td>" + report.dayWorkTime + "</td>";
+                        reportsTable += "<td>" + report.overTime + "</td>";
+                        reportsTable += "</tr>";
+                    })
+
+                    $("#reportBody").html(reportsTable)
+
+
+                },
+                error: response => {
+                    console.log(response);
+                }
+            });
+        })
+    </script>
+</th:block>
+
+</body>
+</html> 

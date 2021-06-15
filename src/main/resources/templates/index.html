@@ -1,0 +1,237 @@
+<!-- Dara 18.05.21 -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+  <head>
+    <meta charset="UTF-8">
+    <title> TM21 | Dashboard </title>
+    <link rel="stylesheet" th:href="@{css/Admin_NavBar.css}">
+	<!-- Wird benötigt für die Icons -->
+	  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+   </head>
+<body>
+
+<section layout:fragment="content">
+	<div class="wrapper">
+
+		<!-- HEADER -->
+		<header class="header">
+			<p><img th:src="@{images/TM21.png}" alt="TM21 Logo" width="110" height=""></p>
+		</header>
+
+		<!-- LANGUAGE -->
+		<a href="#eng" class="abtn" onclick="langReload('ENGLISH')">ENGLISH</a>
+		<a href="#de" class="abtn" onclick="langReload('DEUTSCH')">DEUTSCH</a>
+
+		<!-- START / PAUSE ARBEIT -->
+		<article class = "main">
+			<h4 id="welcomeHeader">Welcome
+				<small sec:authentication="name"></small>
+			</h4>
+			<h3>Start / Pause your Work Day</h3>
+			<button class="btn" id="start-button" onclick="calculateWork('start')">START</button>
+			<button class="btn" id="pause-button" onclick="calculateWork('pause')">PAUSE</button>
+		</article>
+		<article class = "main3">
+			<h3 id="workedToday">TODAY WORK HOURS</h3>
+			<h5 id="already-worked-text">ALREADY WORKED: <span id="already-worked"></span></h5>
+			<h5 id="current-working-text">CURRENTLY WORKING FOR: <span id="current-working"></span></h5>
+			<h5>TOTAL WORKED: <span id="total-worked-today"></span></h5>
+		</article>
+
+		<!-- BUTTON CONTENT / MODAL BUTTONS-->
+		<aside class="aside aside1">
+			<h1 id="reportCard">REPORT</h1>
+			<button onclick="toReport()" class="btn" data-modal="modal1" id="reportBtn">CREATE</button>
+		</aside>
+		<aside class="aside aside1">
+			<h1 id="workingHrsCard">WORKING HOURS</h1>
+			<button onclick="toWorkingHours()" class="btn" data-modal="modal2" id="workingHoursBtn">EDIT</button>
+		</aside>
+		<aside class="aside aside1" sec:authorize="hasAnyRole('ROLE_EMPLOYEE')">
+			<h1 id="Book">BOOK VACATION</h1>
+			<button onclick="toBookVacation()" class="btn" id="bookVacBtn">BOOK</button>
+		</aside>
+		<aside class="aside aside1" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			<h1>EMPLOYEE REPORT</h1>
+			<button onclick="toEmpReport()" class="btn" data-modal="modal3">CREATE</button>
+		</aside>
+		<aside class="aside aside1" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			<h1 id="addEmpCard">ADD EMPLOYEE</h1>
+			<button onclick="toAddEmp()" class="btn" data-modal="modal4">ADD</button>
+		</aside>
+		<aside class="aside aside1" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+			<h1 id="requestsCard">REQUESTS</h1>
+			<button onclick="toRequests()" class="btn" data-modal="modal5">EDIT</button>
+		</aside>
+
+		<!-- LIST CONTENT -->
+		<article class = "main2">
+			<h2 id="overview">YOUR OVERVIEW:</h2>
+		</article>
+		<table class="table">
+			<thead>
+			<th id="dateList">Date</th>
+			<th id="actHrsList">Actual Hours</th>
+			<th id="targetHrsList">Target Hours</th>
+			<th id="overtimeList">Overtime</th>
+			<th id="vacLeftList">Vacation Days Left</th>
+			</thead>
+			<tbody>
+			<tr th:if="${dayReport != null}">
+				<td data-label="Date" th:text="${dayReport.day}">19.05.21</td>
+				<td data-label="Actual Hours" id="actual-hours" th:text="${dayReport.getTimeWorked()}">114h</td>
+				<td data-label="Target Hours" th:text="${dayReport.getDayWorkTime()}">112h</td>
+				<td data-label="Overtime" id="overtime-hours" th:text="${dayReport.getOverTime()}">2h</td>
+				<td data-label="Vacation Days Left" th:text="${vacation.getDays()}">22</td>
+			</tr>
+			</tbody>
+		</table>
+
+
+		<!-- FOOTER -->
+		<footer class ="footer">
+			<h1>SETTINGS</h1>
+		</footer>
+
+		<!-- SETTINGS -->
+		<aside class="aside aside2">
+			<h1 id="accSettCard">ACCOUNT-SETTINGS</h1>
+			<button onclick="toAccSettings()"class="btn">EDIT</button>
+		</aside>
+		<aside class="aside aside2">
+			<h1 id="logoutCard">LOGOUT</h1>
+			<button class="btn" id="logoutBtn">LOGOUT</button>
+		</aside>
+		<aside class="aside aside2">
+			<h1 id="themeCard">THEME</h1>
+			<button class="btn" id="themeSwitch" onclick="darkMode()">SWITCH</button>
+		</aside>
+
+	</div>
+
+	<!-- POP UP MODALS -->
+
+	<!-- POP UP MODAL FOR LOGOUT-->
+	<div class="modal" id="modal1">
+		<div class="modal-content">
+			<div class="modal-header">Are You Sure?</div>
+			<div class="modal-body">
+				<form th:action="@{/logout}" method="get" id="logout-form">
+					<p>If you logout, your working timer will automatically stop.</p>
+					<p>If you are going to make a pause, please press the button "PAUSE" instead
+						of logging out.</p>
+					<button class="btn" type="submit">I'M SURE</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<div class="modal-close">+</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<th:block layout:fragment="javascript">
+	<script th:src="@{js/Admin_NavBar.js}"></script>
+	<script th:src="@{js/ChangeLanguage_AdminIndex.js}"></script>
+	<script th:src="@{js/Admin_Index.js}"></script>
+	<script type="text/javascript">
+		document.getElementById("logout-form").addEventListener("submit", e => {
+			e.preventDefault();
+
+
+			//end time for the last working hours
+			$.ajax({
+				method: "post",
+				url: "/api/logout",
+				dataType: "text",
+				success: response => {
+
+					//the server responds with updated or not_authenticated
+					if (response == "continue_log_out"){
+						window.location.href = "/logout";
+					}
+					else{
+						location.reload()
+					}
+
+
+				},
+				error: response => {
+					console.log(response);
+				}
+			});
+		})
+
+		let working = false;
+
+		let work = setInterval(updateTimeWorked, 1000);
+
+		function updateTimeWorked(){
+			$.ajax({
+				method: "post",
+				url: "/api/getHoursWorked",
+				dataType: "text",
+				success: response => {
+					let hoursWorked  = JSON.parse(response);
+					$("#already-worked").text(hoursWorked.timeWorked);
+					$("#current-working").text(hoursWorked.currentWorkingTime);
+					$("#total-worked-today").text(hoursWorked.totalTimeWorked);
+
+					$("#actual-hours").text(hoursWorked.totalTimeWorked);
+					$("#overtime-hours").text(hoursWorked.overtimeTimeWorked);
+
+					if(hoursWorked.timeWorked == ''){
+						$("#already-worked-text").hide();
+						$("#current-working-text").hide();
+					}
+
+					if (hoursWorked.working == true){
+						$("#already-worked-text").show();
+						$("#current-working-text").show();
+
+						$("#start-button").prop('disabled', true);
+						$("#pause-button").prop('disabled', false);
+					}else{
+						$("#start-button").prop('disabled', false);
+
+						$("#already-worked-text").hide();
+						$("#current-working-text").hide();
+
+						$("#pause-button").prop('disabled', true);
+						clearInterval(work);
+					}
+				},
+				error: response => {
+					console.log(response);
+				}
+			});
+		}
+
+		function calculateWork(action){
+			$.ajax({
+				method: "post",
+				url: "/api/startPauseWork",
+				dataType: "text",
+				data: {
+					action: action
+				},
+				success: response => {
+					working  = JSON.parse(response);
+					if (working == true){
+						work = setInterval(updateTimeWorked, 1000);
+					}
+				},
+				error: response => {
+					console.log(response);
+				}
+			});
+		}
+	</script>
+</th:block>
+
+  </body>
+  </html> 
+

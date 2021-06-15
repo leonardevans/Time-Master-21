@@ -1,0 +1,313 @@
+/* DARA, 18.05.21*/
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+
+*{
+  font-family: 'Montserrat', 'sans-serif';
+  box-sizing: border-box;
+}
+
+.dark-mode{
+  filter: invert(1) hue-rotate(180deg)
+} 
+
+.invert{
+  filter: invert(1) hue-rotate(180deg)
+}
+
+body{
+  background-color: white;
+  margin: 0;
+  padding: 0px;
+}
+
+.wrapper{
+  display: flex;
+  flex-flow: row wrap;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.wrapper>*{
+  padding: 10px;
+  margin: 10px;
+  flex: 1 100%;
+  border-radius: 10px;
+}
+
+ .btn{
+  border: none;
+  color: black;
+  border-radius: 4px;
+  transition: ease-out 0.3s;
+  font-size: 18px;
+  outline: none;
+  border: 2px solid #ffffff;
+  position: relative;
+  z-index: 0;
+}
+
+.btn:hover{
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.btn::before{
+  transition: 0.5s all ease;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  opacity: 0;
+  content: "";
+  background-color: #1F539F;
+}
+
+.btn:hover:before{
+  transition: 0.5s all ease;
+  left: 0;
+  right: 0;
+  opacity: 1;
+  z-index: -1;
+}
+
+.table{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table td, .table th{
+padding: 12px 15px;
+border: 1px solid #ddd;
+text-align: center;
+}
+
+.table th{
+background-color: #1F539F;
+color: #ffffff;
+}
+
+.table tbody tr:nth-child(even){
+background-color: #f5f5f5;
+}
+
+/*responsive settings for tables*/
+
+@media(max-width: 500px){
+  .table thead{
+    display: none;
+  }
+
+  .table, .table tbody, .table tr, .table td{
+    display: block;
+    width: 100%;
+  }
+  .table tr{
+    margin-bottom: 15px;
+  }
+  .table td{
+    text-align: right;
+    padding-left: 50%;
+    text-align: right;
+    position: relative;
+  }
+  .table td::before{
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
+
+/*responsive settings for tables end*/
+
+.header{
+  background: #DEE2E6;
+  height: 120px;
+}
+
+.footer{
+  background: #343A40;
+  color: white;
+  height: 100px;
+}
+
+.main{ /*LOGO PANEL*/
+  text-align: center;
+  background: #CED4DA;
+  height: 150px;
+  font-size: 20px;
+}
+
+.main2{ /* "YOUR OVERVIEW" */
+  text-align: center;
+  background: #495057;
+  color: white;
+  height: 100px;
+  font-size: 20px;
+}
+
+.main3{ /* "WORKED TODAY" */
+  text-align: center;
+  background: #ADB5BD;
+  /*height: 120px;*/
+  font-size: 20px;
+}
+
+.aside1{ /* FIRST CARD ROW WITH BUTTONS */
+  background: #6C757D;
+  color: white;
+}
+
+.aside2{ /* SECOND CARD ROW WITH BUTTONS */
+  background: #212529;
+  color: white;
+}
+
+/* MODAL FOR LOGOUT */
+.modal{
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(192, 192, 192, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  z-index: 2;
+  animation: modal-open .5s;
+}
+
+.modal-content{
+  width: 600px;
+  height: 250px;
+  background-color: white;
+  border-radius: 4px;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  font-size: 18px;
+  z-index: 4;
+}
+
+.modal-header{
+  font-weight: 500;
+  font-weight: bold;
+  padding: 10px;
+  font-size: 26px;
+}
+
+.modal-header {
+  position: center;
+  font-size: 20px;
+  border: 0;
+  outline: 0;
+  padding: 5px 8px;
+}
+
+.modal-body{
+  color: gray;
+  padding: 15px 0;
+}
+
+.modal-footer{
+  padding: 15px 0;
+}
+
+.modal footer .modal-close{
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  color: blue;
+}
+
+input{
+  width: 50%;
+  display: block;
+  margin: 20px auto;
+}
+
+
+.modal-close{
+  position: absolute;
+  top: 0;
+  right: 14px;
+  font-size: 42px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+@keyframes modal-open{
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+
+.date{
+  font-size: 18px;
+  display: flex;
+  text-align: center;
+}
+
+.radio{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+}
+
+.radioLabel {
+  float: left;
+  clear: none;
+  padding: 0px 1em 0px 8px;
+}
+
+select{
+  justify-content: center;
+  display: flex;
+  text-align: center;
+  font-size: 16px;
+}
+
+
+@media all and(min-width: 800px){
+  .main{
+    flex: 3;
+  }
+  
+  .aside1{
+    order: 1;
+  }
+
+  .aside2{
+    order: 2;
+  }
+
+  .main{
+    order: 2;
+  }
+
+  .footer{
+    order: 4;
+  }
+}
+
+@media all and (min-width: 600px){
+  .aside{
+    flex: 1;
+  }
+
+}
+/* DARA, 18.05.21*/

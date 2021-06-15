@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/main_layout}">
+
+<head>
+	<meta charset="utf-8"/>
+	<title>Anmelden | Login</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+	<style type="text/css">
+		.success-message{
+			color: green;
+		}
+		.error-message{
+			color: red;
+		}
+		.logged-out{
+			color: #009EFF;
+		}
+	</style>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<section layout:fragment="content">
+	<img class="wave" th:src="@{/images/background_login.png}">
+	<div class="container">
+		<div class="img">
+			<img th:src="@{/images/time_icon.svg}">
+		</div>
+		<div class="login_box">
+			<form th:action="@{/login}" th:id="login-form" method="post">
+				<img th:src="@{/images/TM21.png}" alt="tm21_logo">
+				<h2 class="title">Willkommen</h2>
+				<div th:if="${param.logout}">
+					<div class="logged-out">
+						You have been logged out.
+					</div>
+				</div>
+
+				<div>
+					<p class="success-message"></p>
+					<p class="error-message"></p>
+				</div>
+
+				<div class="input-div one">
+					<div class="i">
+						<i class="fas fa-user-circle"></i> <!-- von fontawesome.com -->
+					</div>
+					<div class="div">
+						<label for="username">E-Mail:</label>
+						<input type="e-mail" id="username" name="username" class="input" required autofocus>
+					</div>
+				</div>
+				<div class="input-div pass">
+					<div class="i">
+						<i class="fas fa-lock"></i> <!-- von fontawesome.com -->
+					</div>
+					<div class="div">
+						<label for="password">Passwort:</label>
+						<input type="password" name="password" id="password" class="input" required>
+					</div>
+				</div>
+				<a href="#" id="reset-password">Passwort vergessen?</a>
+				<input type="submit" class="btn" value="Login">
+			</form>
+		</div>
+	</div>
+</section>
+
+
+<th:block layout:fragment="javascript">
+	<script th:src="@{js/Admin_NavBar.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+		let loginForm = document.getElementById("login-form");
+
+		//when the form is submitted
+		loginForm.addEventListener("submit", e => {
+			e.preventDefault();
+
+			$.ajax({
+				method: "post",
+				url: "/api/auth/login",
+				data: $("#login-form").serializeArray(),
+				dataType: "text",
+				success: response => {
+
+					//the server responds with true credentials are valid and session is created and false if otherwise
+					if (response == "true"){
+						$(".error-message").text("")
+						$(".success-message").text("Logged in")
+						window.location.href = "/";
+					}else{
+						$(".error-message").text("Bad Credentials")
+						$(".success-message").text("")
+					}
+
+
+				},
+				error: response => {
+					console.log(response);
+				}
+			});
+		})
+
+		$("#reset-password").click(e => {
+			//first check if username and password are not empty
+			if ($("#username").val() == "" || $("#password").val() == ""){
+				$(".error-message").text("Please enter username and password");
+			}
+			else{
+				//send reset password request
+				$.ajax({
+					method: "post",
+					url: "/api/auth/reset-password",
+					data: $("#login-form").serializeArray(),
+					dataType: "text",
+					success: response => {
+
+						//the server responds with true credentials are valid and session is created and false if otherwise
+						if (response == "password_reset_successfully"){
+							$(".error-message").text("")
+							$(".success-message").text("Password reset successfully. You can now login with your new credentials!")
+						}
+						else if(response == "no_such_user"){
+							$(".error-message").text("You are not registered! Please check your email.")
+							$(".success-message").text("")
+						}
+						else {
+							$(".error-message").text("Failed to reset password!")
+							$(".success-message").text("")
+						}
+
+					},
+					error: response => {
+						console.log(response);
+					}
+				});
+			}
+		})
+	</script>
+</th:block>
+
+</body>
+</html>
