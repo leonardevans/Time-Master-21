@@ -617,3 +617,4 @@ java.lang.NumberFormatException: Error at index 2 in: "14.554000"
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.46.jar:9.0.46]
 	at java.base/java.lang.Thread.run(Thread.java:829) ~[na:na]
 
+2022-02-01 18:17:33.714  INFO 10675 --- [SpringContextShutdownHook] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed from ACCEPTING_TRAFFIC to REFUSING_TRAFFIC
