@@ -6,7 +6,7 @@
 	<meta charset="utf-8"/>
 	<title>Anmelden | Login</title>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
-	<style type="text/css">
+	<style>
 		.success-message{
 			color: green;
 		}
@@ -22,7 +22,7 @@
 <body>
 
 <section layout:fragment="content">
-	<img class="wave" th:src="@{/images/background_login.png}">
+	<img alt="img" class="wave" th:src="@{/images/background_login.png}">
 	<div class="container">
 		<div class="img">
 			<img th:src="@{/images/time_icon.svg}">
@@ -48,7 +48,7 @@
 					</div>
 					<div class="div">
 						<label for="username">E-Mail:</label>
-						<input type="e-mail" id="username" name="username" class="input" required autofocus>
+						<input type="e-mail" value="admin@timemaster.com" id="username" name="username" class="input" required autofocus>
 					</div>
 				</div>
 				<div class="input-div pass">
@@ -57,7 +57,7 @@
 					</div>
 					<div class="div">
 						<label for="password">Passwort:</label>
-						<input type="password" name="password" id="password" class="input" required>
+						<input type="password" value="adminsurname" name="password" id="password" class="input" required>
 					</div>
 				</div>
 				<a href="#" id="reset-password">Passwort vergessen?</a>
@@ -85,7 +85,7 @@
 				success: response => {
 
 					//the server responds with true credentials are valid and session is created and false if otherwise
-					if (response == "true"){
+					if (response === "true"){
 						$(".error-message").text("")
 						$(".success-message").text("Logged in")
 						window.location.href = "/";
@@ -104,7 +104,7 @@
 
 		$("#reset-password").click(e => {
 			//first check if username and password are not empty
-			if ($("#username").val() == "" || $("#password").val() == ""){
+			if ($("#username").val() === "" || $("#password").val() === ""){
 				$(".error-message").text("Please enter username and password");
 			}
 			else{
@@ -117,11 +117,11 @@
 					success: response => {
 
 						//the server responds with true credentials are valid and session is created and false if otherwise
-						if (response == "password_reset_successfully"){
+						if (response === "password_reset_successfully"){
 							$(".error-message").text("")
 							$(".success-message").text("Password reset successfully. You can now login with your new credentials!")
 						}
-						else if(response == "no_such_user"){
+						else if(response === "no_such_user"){
 							$(".error-message").text("You are not registered! Please check your email.")
 							$(".success-message").text("")
 						}
