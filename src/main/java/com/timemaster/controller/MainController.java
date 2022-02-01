@@ -68,12 +68,12 @@ public class MainController {
         model.addAttribute("dayReport", dayReport);
         model.addAttribute("workHours", workHours);
 
-        return "/index";
+        return "index";
     }
 
     @GetMapping("/login")
     public String showLoginPage(){
-        return "/login";
+        return "login";
     }
 
     @GetMapping("/account-settings")
@@ -87,14 +87,14 @@ public class MainController {
             return "redirect:/login";
 
         model.addAttribute("user", user);
-        return "/AccountSettings";
+        return "AccountSettings";
     }
 
     @GetMapping("/AddEmployee")
     public String showAddEmployeePage(Model model){
         User user = new User();
         model.addAttribute("user", new User());
-        return "/AddEmployee";
+        return "AddEmployee";
     }
 
     @GetMapping("/WorkingHours")
