@@ -618,3 +618,33 @@ java.lang.NumberFormatException: Error at index 2 in: "14.554000"
 	at java.base/java.lang.Thread.run(Thread.java:829) ~[na:na]
 
 2022-02-01 18:17:33.714  INFO 10675 --- [SpringContextShutdownHook] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed from ACCEPTING_TRAFFIC to REFUSING_TRAFFIC
+2022-02-01 18:30:22.457  INFO 21066 --- [restartedMain] com.timemaster.TimeMaster21Application   : Starting TimeMaster21Application using Java 11.0.13 on kali with PID 21066 (/home/leo/IdeaProjects/Time-Master-21/target/classes started by leo in /home/leo/IdeaProjects/Time-Master-21)
+2022-02-01 18:30:22.468  INFO 21066 --- [restartedMain] com.timemaster.TimeMaster21Application   : No active profile set, falling back to default profiles: default
+2022-02-01 18:30:22.680  WARN 21066 --- [background-preinit] o.s.h.c.j.Jackson2ObjectMapperBuilder    : For Jackson Kotlin classes support please add "com.fasterxml.jackson.module:jackson-module-kotlin" to the classpath
+2022-02-01 18:30:22.923  INFO 21066 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-02-01 18:30:22.923  INFO 21066 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-02-01 18:30:23.655  INFO 21066 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-02-01 18:30:23.728  INFO 21066 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 65 ms. Found 5 JPA repository interfaces.
+2022-02-01 18:30:24.436  INFO 21066 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-02-01 18:30:24.444  INFO 21066 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-02-01 18:30:24.445  INFO 21066 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.46]
+2022-02-01 18:30:24.502  INFO 21066 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-02-01 18:30:24.503  INFO 21066 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1579 ms
+2022-02-01 18:30:24.551  WARN 21066 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Cannot deserialize session attribute [SPRING_SECURITY_CONTEXT] for session [40C7893D473A3B66B9DB9FBBAFFB139E]
+2022-02-01 18:30:24.712  INFO 21066 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-02-01 18:30:24.763  INFO 21066 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.31.Final
+2022-02-01 18:30:24.873  INFO 21066 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-02-01 18:30:24.958  INFO 21066 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-02-01 18:30:30.190  INFO 21066 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-02-01 18:30:30.213  INFO 21066 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+2022-02-01 18:30:39.784  INFO 21066 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-02-01 18:30:39.806  INFO 21066 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-02-01 18:30:40.201  WARN 21066 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-02-01 18:30:40.582  INFO 21066 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2022-02-01 18:30:40.691  INFO 21066 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5d873e00, org.springframework.security.web.context.SecurityContextPersistenceFilter@3a49ebd0, org.springframework.security.web.header.HeaderWriterFilter@60240f4d, org.springframework.web.filter.CorsFilter@16befaa9, org.springframework.security.web.authentication.logout.LogoutFilter@7de61160, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7e9602ee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@421432e8, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5e24c4e1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5dca2b69, org.springframework.security.web.session.SessionManagementFilter@4968829b, org.springframework.security.web.access.ExceptionTranslationFilter@2634099b, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@677d5aab]
+2022-02-01 18:30:41.060  INFO 21066 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-02-01 18:30:41.093  INFO 21066 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-02-01 18:30:41.105  INFO 21066 --- [restartedMain] com.timemaster.TimeMaster21Application   : Started TimeMaster21Application in 19.393 seconds (JVM running for 20.731)
+2022-02-01 18:30:41.107  INFO 21066 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2022-02-01 18:30:41.784  INFO 21066 --- [restartedMain] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2022-02-01 18:31:34.886  INFO 21066 --- [SpringContextShutdownHook] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed from ACCEPTING_TRAFFIC to REFUSING_TRAFFIC
